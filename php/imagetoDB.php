@@ -4,7 +4,7 @@ define('DB_USER', 'developers');
 define('DB_PASSWORD', '1234');
 define('DB_HOST', '192.168.137.98');
 <<<<<<< HEAD
-$wwwdirectory = "/chadaporn/rabbizhillresort";
+$wwwdirectory = "/rabbizhillresort";
 
 =======
 $wwwdirectory = "/rabbizhillresort";
