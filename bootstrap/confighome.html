@@ -1,98 +1,119 @@
  <html>
-<head>
-	<title>Web Configuration</title>
-	<meta charset="utf-8"> 
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<link rel="stylesheet" href="css/jasny-bootstrap.css">
-	<!-- Optional: Include the jQuery library -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	<!-- Optional: Incorporate the Bootstrap JavaScript plugins -->
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/jasny-bootstrap.js"></script>
-	<script src="js/configglobal.js"></script>
-	<script src="js/confighome.js"></script>
-</head>
-<body>
-	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#">Gallery Configuration</a>
-			</div>
-			<!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav">
-					<li class="active"><a href="confighome.html">Home</a></li>
-					<li><a href="configrooms.html">Rooms</a></li>
-					<li><a href="configfood.html">Food&Drinks</a></li>
-					<li><a href="configfacilities.html">Facilities</a></li>
-					<li><a href="configevents.html">Events</a></li>
-					<li><a href="configgallery.html">Gallery</a></li>
-					<li><a href="configaround.html">Around</a></li>
-					<li><a href="management.html">Management</a></li>
-				</ul>
-			</div><!-- /.navbar-collapse -->
-		</div>
-	</nav>
-	<div class="container" style="margin-top:80px;">
-		<div id="alert_placeholder"></div>
-		<p>
-			textbox
-		</p>
-		<p>
-			<form role="form" id="formImageUpload" enctype="multipart/form-data" action="../php/uploadPhoto.php" method="POST">
-				
-				<div class="fileinput fileinput-new" data-provides="fileinput">
-					<div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;"></div>
-					<div>
-						<span class="btn btn-default btn-file">
-							<span class="fileinput-new">Upload Photo</span>
-							<span class="fileinput-exists">Change</span>
-							<input type="file" name="upFile" id="exampleInputFile">
-							<input type="hidden" name="galleryId" value="2">
-						</span>
-						<a id="btnRemoveUpload" href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
-						<input type="submit" id="btnImageUpload" class="btn btn-default fileinput-exists" data-loading-text="Uploading..." value="Upload" autocomplete="off">
-						<p class="help-block">Example block-level help text here.</p>
-					</div>
-				</div>
-			</form>
-		</p>
-		<p>
-			<div class="panel panel-default">
-				<div class="panel-heading">Gallery</div>
-				<div class="panel-body">
-					<div class="row" id="galleryitem">
-						
-					</div>
-				</div>
-			</div>
-		</p>
-	</div>
-	<!-- Modal -->
-	<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-					<h4 class="modal-title" id="ConfirmDeleteModalLabel">Do you want to delete this image?</h4>
-				</div>
-				<div class="modal-body">
-					<div href="#" class="thumbnail"><img id="modalimage" src=""></div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-danger" onclick="deleteImage()">Delete</button>
-				</div>
-			</div>
-		</div>
-	</div>
-</body>
-</html>
+ <head>
+ 	<title>Web Configuration</title>
+ 	<meta charset="utf-8"> 
+ 	<meta name="viewport" content="width=device-width, initial-scale=1">
+ 	<!-- Latest compiled and minified CSS -->
+ 	<link rel="stylesheet" href="css/bootstrap.min.css">
+ 	<link rel="stylesheet" href="css/jasny-bootstrap.css">
+ 	<!-- Optional: Include the jQuery library -->
+ 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+ 	<!-- Optional: Incorporate the Bootstrap JavaScript plugins -->
+ 	<script src="js/bootstrap.min.js"></script>
+ 	<script src="js/jasny-bootstrap.js"></script>
+ 	<script src="js/configglobal.js"></script>
+ 	<script src="js/confighome.js"></script>
+ </head>
+ <body>
+ 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+ 		<div class="container">
+ 			<div class="navbar-header">
+ 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+ 					<span class="sr-only">Toggle navigation</span>
+ 					<span class="icon-bar"></span>
+ 					<span class="icon-bar"></span>
+ 					<span class="icon-bar"></span>
+ 				</button>
+ 				<a class="navbar-brand" href="#">Gallery Configuration</a>
+ 			</div>
+ 			<!-- Collect the nav links, forms, and other content for toggling -->
+ 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+ 				<ul class="nav navbar-nav">
+ 					<li class="active"><a href="confighome.html">Home</a></li>
+ 					<li><a href="configrooms.html">Rooms</a></li>
+ 					<li><a href="configfood.html">Food&Drinks</a></li>
+ 					<li><a href="configfacilities.html">Facilities</a></li>
+ 					<li><a href="configevents.html">Events</a></li>
+ 					<li><a href="configgallery.html">Gallery</a></li>
+ 					<li><a href="configaround.html">Around</a></li>
+ 					<li><a href="management.html">Management</a></li>
+ 				</ul>
+ 			</div><!-- /.navbar-collapse -->
+ 		</div>
+ 	</nav>
+ 	<div class="container" style="margin-top:80px;">
+ 		<div id="alert_placeholder"></div>
+ 		<p>
+ 			<form class="form-horizontal" role="form">
+ 				<div class="form-group">
+ 					<label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+ 					<div class="col-sm-10">
+ 						<input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+ 					</div>
+ 				</div>
+ 				<div class="form-group">
+ 					<label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+ 					<div class="col-sm-10">
+ 						<input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+ 					</div>
+ 				</div>
+ 				<div class="form-group">
+ 					<div class="col-sm-offset-2 col-sm-10">
+ 						<a class="btn btn-default">Edit</a>
+ 						<button type="submit" class="btn btn-success">save</button>
+ 					</div>
+ 				</div>
+ 			</form>
+ 		</p>
+ 		<p>
+ 			<form class="form-horizontal" role="form" id="formImageUpload" enctype="multipart/form-data" action="../php/uploadPhoto.php" method="POST">
+ 				<div class="form-group">
+ 					<label class="col-sm-2 control-label">Upload Photo</label>
+	 				<div class="col-sm-offset-2 col-sm-10 fileinput fileinput-new" data-provides="fileinput">
+	 					<div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;"></div>
+	 					<div>
+	 						<span class="btn btn-default btn-file">
+	 							<span class="fileinput-new">Upload</span>
+	 							<span class="fileinput-exists">Change</span>
+	 							<input type="file" name="upFile" id="exampleInputFile">
+	 							<input type="hidden" name="galleryId" value="2">
+	 						</span>
+	 						<a id="btnRemoveUpload" href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+	 						<input type="submit" id="btnImageUpload" class="btn btn-default fileinput-exists" data-loading-text="Uploading..." value="Upload" autocomplete="off">
+	 						<p class="help-block">Example block-level help text here.</p>
+	 					</div>
+	 				</div>
+	 			</div>
+ 			</form>
+ 		</p>
+ 		<p>
+ 			<div class="panel panel-default">
+ 				<div class="panel-heading">Gallery</div>
+ 				<div class="panel-body">
+ 					<div class="row" id="galleryitem">
+
+ 					</div>
+ 				</div>
+ 			</div>
+ 		</p>
+ 	</div>
+ 	<!-- Modal -->
+ 	<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+ 		<div class="modal-dialog">
+ 			<div class="modal-content">
+ 				<div class="modal-header">
+ 					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+ 					<h4 class="modal-title" id="ConfirmDeleteModalLabel">Do you want to delete this image?</h4>
+ 				</div>
+ 				<div class="modal-body">
+ 					<div href="#" class="thumbnail"><img id="modalimage" src=""></div>
+ 				</div>
+ 				<div class="modal-footer">
+ 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+ 					<button type="button" class="btn btn-danger" onclick="deleteImage()">Delete</button>
+ 				</div>
+ 			</div>
+ 		</div>
+ 	</div>
+ </body>
+ </html>
