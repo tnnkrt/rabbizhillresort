@@ -3,10 +3,10 @@
 	$countcheck;
 	$datatouse=array(array());
 	$datatocheck=array(array());
-	$servername = "localhost";
-	$username = "root";
+	$servername = "192.168.137.98";
+	$username = "developers";
 	$password = "1234";
-	$dbname = "mydb";
+	$dbname = "resort";
 	$conn;
 	$next;
 	$sum=0;
