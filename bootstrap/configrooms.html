@@ -1,0 +1,153 @@
+<html>
+<head>
+	<title>Web Configuration</title>
+	<meta charset="utf-8"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/jasny-bootstrap.css">
+	<!-- Optional: Include the jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<!-- Optional: Incorporate the Bootstrap JavaScript plugins -->
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jasny-bootstrap.js"></script>
+	<script src="js/configglobal.js"></script>
+	<script src="js/configrooms.js"></script>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Gallery Configuration</a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li><a href="confighome.html">Home</a></li>
+					<li class="active"><a href="configrooms.html">Rooms</a></li>
+					<li><a href="configfood.html">Food&Drinks</a></li>
+					<li><a href="configfacilities.html">Facilities</a></li>
+					<li><a href="configevents.html">Events</a></li>
+					<li><a href="configgallery.html">Gallery</a></li>
+					<li><a href="configaround.html">Around</a></li>
+					<li><a href="management.html">Management</a></li>
+				</ul>
+			</div><!-- /.navbar-collapse -->
+		</div>
+	</nav>
+	<div class="container" style="margin-top:80px;">
+		<div id="alert_placeholder"></div>
+		<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+			<div class="panel panel-default">
+				<div class="panel-heading" role="tab" id="BrownieBunnyHeading">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion" href="#BrownieBunnyCollapse" aria-expanded="true" aria-controls="BrownieBunnyCollapse">
+							Brownie Bunny
+						</a>
+					</h4>
+				</div>
+				<div id="BrownieBunnyCollapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="BrownieBunnyHeading">
+					<div class="panel-body">
+						<p><!--image gallery-->
+							<form role="form" id="formImageUpload" enctype="multipart/form-data" action="../php/uploadPhoto.php" method="POST">
+
+								<div class="fileinput fileinput-new" data-provides="fileinput">
+									<div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;"></div>
+									<div>
+										<span class="btn btn-default btn-file">
+											<span class="fileinput-new">Upload Photo</span>
+											<span class="fileinput-exists">Change</span>
+											<input type="file" name="upFile" id="exampleInputFile">
+											<input type="hidden" name="galleryId" value="1">
+										</span>
+										<a id="btnRemoveUpload" href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+										<input type="submit" id="btnImageUpload" class="btn btn-default fileinput-exists" data-loading-text="Uploading..." value="Upload" autocomplete="off">
+										<p class="help-block">Example block-level help text here.</p>
+									</div>
+								</div>
+							</form>
+						</p>
+						<p>
+							<div class="panel panel-default">
+								<div class="panel-heading">Gallery</div>
+								<div class="panel-body">
+									<div class="row" id="galleryitem">
+
+									</div>
+								</div>
+							</div>
+						</p><!--end image gallery-->
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading" role="tab" id="IvoryBunnyHeading">
+					<h4 class="panel-title">
+						<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#IvoryBunnyCollapse" aria-expanded="false" aria-controls="IvoryBunnyCollapse">
+							Ivory Bunny
+						</a>
+					</h4>
+				</div>
+				<div id="IvoryBunnyCollapse" class="panel-collapse collapse " role="tabpanel" aria-labelledby="IvoryBunnyHeading">
+					<div class="panel-body">
+						content
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading" role="tab" id="SnowieBunnyHeading">
+					<h4 class="panel-title">
+						<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#SnowieBunnyCollapse" aria-expanded="false" aria-controls="SnowieBunnyCollapse">
+							Snowie Bunny
+						</a>
+					</h4>
+				</div>
+				<div id="SnowieBunnyCollapse" class="panel-collapse collapse " role="tabpanel" aria-labelledby="SnowieBunnyHeading">
+					<div class="panel-body">
+						content
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading" role="tab" id="NewBunnyHeading">
+					<h4 class="panel-title">
+						<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#NewBunnyCollapse" aria-expanded="false" aria-controls="NewBunnyCollapse">
+							New Bunny
+						</a>
+					</h4>
+				</div>
+				<div id="NewBunnyCollapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="NewBunnyHeading">
+					<div class="panel-body">
+						content
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Image Modal -->
+	<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title" id="ConfirmDeleteModalLabel">Do you want to delete this image?</h4>
+				</div>
+				<div class="modal-body">
+					<div href="#" class="thumbnail"><img id="modalimage" src=""></div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-danger" onclick="deleteImage()">Delete</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,5 @@
+configgallery.html
+'#formImageUpload' hidden input value for galleryId=1
+
+configrooms.html
+all panels name

@@ -1,0 +1,285 @@
+@-ms-viewport{
+  width: device-width;
+}
+a {
+	text-decoration: none;
+}
+a:link {
+	color: white;
+}
+a:visited {
+	color: white;
+}
+a:hover {
+	color: white;
+}
+a:active {
+	color: white;
+}
+html{
+	background: url(../img/bg.jpg) no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	background-color: black;
+}
+body {
+	color: white;
+	border-color: white;
+	padding: 0px;
+	margin: 0px;
+}
+img {
+	max-width: 100%;
+}
+.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+.right{
+	float:right;
+	margin-left:5px;
+	margin-right:5px;
+}
+.horizontallist {
+	list-style-type: none;
+}
+.horizontallist > li{
+	float: left;
+}
+.fitcontent {
+	width: -moz-fit-content;
+	width: -webkit-fit-content;
+	width: fit-content;
+}
+#logo {
+	width: 200px;
+	height: 150px;
+	margin-top: 25px;
+	margin-bottom: 25px;
+
+}
+.hiddenvisibility {
+	visibility: hidden;
+}
+.gallery{
+}
+.gallery-item{
+	border: solid 1px;
+	display: inline-block;
+	width: 200px;
+	height: 200px;
+	margin: 5px;
+}
+#footparent{
+	width: 100%;
+	position: fixed;
+	bottom: 5px;
+}
+#header{
+	position: absolute;
+	width: 100%;
+}
+#body{
+	width: 100%;
+	padding-top: 250px;
+}
+#bgspace{
+	position: fixed;
+	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIgc3RvcC1vcGFjaXR5PSIwLjY1Ii8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiIHN0b3Atb3BhY2l0eT0iMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top,  rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,1)), color-stop(100%,rgba(0,0,0,0))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(0,0,0,1) 0%,rgba(0,0,0,0) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(0,0,0,1) 0%,rgba(0,0,0,0) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(0,0,0,1) 0%,rgba(0,0,0,0) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(0,0,0,1) 0%,rgba(0,0,0,0) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 ); /* IE6-8 */	
+}
+
+/*desktop and tablet*/
+@media all and (min-width: 1001px) {
+	#navbar {
+		border: solid 1px;
+		white-space: nowrap;
+		text-align: center;
+		width: 96%;
+		max-width: 1200px;
+	}
+	#navlist > a:not(#navmenu) {
+		display: inline-block;
+		vertical-align: middle;
+		text-align: center;
+		margin: 5 2% 5 2%;
+	}
+	#navmenu {
+		display: none;
+	}
+	/*#headerspace{
+		display: none;
+		height: 30px;
+	}*/
+	#foot{
+		/*border: solid 1px;*/
+		white-space: nowrap;
+		/*overflow: hidden;*/
+		text-align: center;
+		width: 96%;
+		max-width: 1200px;
+	}
+	#foot > * {
+		display: table-cell;
+		vertical-align: middle;
+	}
+	#footreserv{
+		color:black;
+		background-color:white;
+		padding:6 30 6 30;
+		text-align:center;
+	}
+	#footsocial{
+		list-style-type: none;
+		border-style:solid;
+		border-width:0 0 1 0;
+		padding: 5 0 5 0;
+		width: 100%;
+	}
+	.bgspace{
+		height: 300px;
+		width: 100%;
+	}
+}
+/*phablet*/
+@media all and (min-width: 386px) and (max-width: 1000px) {
+	#navbar {
+		border-style: solid;
+		border-width: 1 0 1 0;
+		text-align: center;
+		width: 96%;
+	}
+	#navmenu{
+		width: 100%;
+		display: inline-block;
+	}
+	#navmenu > a:not(:last-child){
+		display: inline-block;
+		padding: 5 0 5 15;
+		margin: 0;
+		float: left;
+	}
+	#navmenu > * > *{
+		vertical-align: middle;
+	}
+	#navlist {
+		border-style: solid;
+		border-width: 1 0 0 0;
+	}
+	#navlist > a:not(:nth-last-child(-n+2)){
+		display: inline-block;
+		vertical-align: middle;
+		border-style: solid;
+		border-width: 0 0 1 0;
+		text-align: center;
+		width: 45%;
+		margin: 0 2% 0 2%;
+		padding: 5 0 5 0;
+		line-height: 20px;
+	}
+	#navlist > a:nth-last-child(-n+2){
+		display: inline-block;
+		vertical-align: middle;
+		text-align: center;
+		width: 45%;
+		margin: 0 2% 0 2%;
+		padding: 5 0 5 0;
+		line-height: 20px;
+	}
+	#navreserv{
+		color:black;
+		background-color:white;
+		padding:5 10 5 10;
+		text-align:center;
+		float: right;
+	}
+	.navmenutext{
+	}
+	/*#headerspace{
+		display: none;
+		height: 30px;
+	}*/
+	#foot{
+		display: none;
+	}
+	.bgspace{
+		height: 100%;
+		width: 100%;
+	}
+}
+/*phone*/
+@media all and (max-width: 385px){
+	#navbar {
+		border-style: solid;
+		border-width: 1 0 1 0;
+		text-align: center;
+		width: 96%;
+	}
+	#navmenu{
+		width: 100%;
+		display: inline-block;
+	}
+	#navmenu > a:not(:last-child){
+		display: inline-block;
+		padding: 5 5 5 10;
+		margin: 0;
+		float: left;
+	}
+	#navmenu > * > img{
+		vertical-align: middle;
+	}
+	#navlist {
+		border-style: solid;
+		border-width: 1 0 0 0;
+	}
+	#navlist > a:not(:last-child){
+		display: inline-block;
+		vertical-align: middle;
+		border-style: solid;
+		border-width: 0 0 1 0;
+		text-align: center;
+		width: 94%;
+		margin: 0 2% 0 2%;
+		padding: 5 0 5 0;
+		line-height: 20px;
+	}
+	#navlist >a:last-child {
+		display: inline-block;
+		vertical-align: middle;
+		text-align: center;
+		width: 94%;
+		margin: 0 2% 0 2%;
+		padding: 5 0 5 0;
+		line-height: 20px;
+	}
+	#navreserv{
+		color:black;
+		background-color:white;
+		padding:5 10 5 10;
+		text-align:center;
+		float: right;
+	}
+	.navmenutext{
+		display: none;
+	}
+	/*#headerspace{
+		display: none;
+		height: 30px;
+	}*/
+	#foot{
+		display: none;
+	}
+	.bgspace{
+		height: 100%;
+		width: 100%;
+	}
+}
