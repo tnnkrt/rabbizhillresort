@@ -1,65 +1,51 @@
 <?php
-	$count=0;
+	$count;
+	$countcheck;
 	$datatouse=array(array());
-	$servername = "192.168.137.98";
-	$username = "developers";
+	$datatocheck=array(array());
+	$servername = "localhost";
+	$username = "root";
 	$password = "1234";
-	$dbname = "resort";
+	$dbname = "mydb";
 	$conn;
 	$next;
 	$sum=0;
 	$last_id=0;
-	function tr(){
-		print "<tr>";
-	}
-	function trc(){
-		print "</tr>";
-	}
-	function td(){
-		print "<td>";
-	}
-	function tdc(){
-		print "</td>";
-	}
-	function ptd($fname="default") {
-		print "<td>";
-		print "$fname";
-		print "</td>";
-	}
-	function header_reservation(){
-		tr();
-		ptd("Price");
-		ptd("Room Type");
-		ptd("From Date");
-		ptd("To Date");
-		ptd("Amount");
-		ptd("Search");
-		trc();
-	}
-	function data($Price,$Room,$From,$To,$Amount){
-		tr();
-		ptd("$Price $");
-		ptd("$Room");
-		ptd("$From");
-		ptd("$To");
-		ptd("$Amount");
-		trc();
-	}
-	function insertdataintable($rname,$price,$amount,$pageid=0){
+	$idroomtype;
+	$nameroomtype;
+	$takeprice;
+	$all;
+	function getidroomtype($roomtype){
+		global $idroomtype;
 		global $conn;
-		$sql = "INSERT INTO roomtype (roomname,price,amount,pageid)
-		VALUES ('".$rname."', '".$price."', '".$amount."','".$pageid."')";
-		if (mysqli_query($conn, $sql)) {
-			$last_id = mysqli_insert_id($conn);
-			print "New record created successfully. Last inserted ID is: " . $last_id;
-		} else {
-			print "Error: " . $sql . "<br>" . mysqli_error($conn);
-		}
+		$sql="SELECT * FROM roomtype WHERE roomname='".$roomtype."'";
+		$result=$conn->query($sql);
+		$row=$result->fetch_assoc();
+		$idroomtype=$row['id'];
+	}
+	function getnameroomtype($id){
+		global $nameroomtype;
+		global $conn;
+		$sql="SELECT * FROM roomtype WHERE id=".$id;
+		$result=$conn->query($sql);
+				// echo"<script language=\"JavaScript\">";
+				// echo"alert('".$sql."')";
+				// echo"</script>";
+		$row=$result->fetch_assoc();
+		$nameroomtype=$row['roomname'];
+	}
+	function getprice($id){
+		global $takeprice;
+		global $conn;
+		$sql="SELECT * FROM roomtype WHERE id=".$id;
+		$result=$conn->query($sql);
+		$row=$result->fetch_assoc();
+		$takeprice=$row['price'];
 	}
 	function insertdatainreservation($rtype,$reserv_date,$amount,$price){
 		global $conn;
 		$sql = "INSERT INTO reservation (roomtype,reserv_date,amount,price)
-		VALUES ('".$rtype."', '".$reserv_date."', '".$amount."','".$price."')";
+		VALUES (".$rtype.", '".$reserv_date."', '".$amount."','".$price."')";
 		//echo $rtype.",".$reserv_date.",".$amount.",".$price;
 		if (mysqli_query($conn, $sql)) {
 			$last_id = mysqli_insert_id($conn);
@@ -124,15 +110,15 @@
 		else if ($name==="transaction"){
 			$sql = "CREATE TABLE ".$name." (
 						id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
-						tranid INT(6),
-						reservid INT (6),
+						tranid INT(6) UNSIGNED,
+						reservid INT(6) UNSIGNED,
 						reg_date TIMESTAMP,
 						INDEX fk_tran (tranid),
-						CONSTRAINT fk_tran FOREIGN KEY (tranid) REFERENCES customer(id),
+						CONSTRAINT fk_tran FOREIGN KEY (tranid) REFERENCES customerdata(id),
 						INDEX fk_reserv (reservid),
 						CONSTRAINT fk_reserv FOREIGN KEY (reservid) REFERENCES reservation(id)
 						)";
-			}
+		}
 		if (mysqli_query($conn, $sql)) {
 			print "Table ".$name." created successfully";
 		} else {
@@ -140,165 +126,217 @@
 		}
 		stopserver();
 	}
-	function delete($id=0,$fname="default",$lname="default"){
-		global $conn;
-		if (id!==0){
-			print "id = $id";
-			$sql = "DELETE FROM MyGuests WHERE id=".$id.";";
-			if ($conn->query($sql) === TRUE) {
-				print "Record deleted successfully";
-			} else {
-				print "Error deleting record: " . $conn->error;
-			}
-		}
-		else print "id = 0";
-	}
-	function select_reserv($price=100,$roomtype='-1',$from,$to,$amount='-1'){
+	function groupdata($i,$price,$room,$amount,$reserv){
 		global $conn;
 		global $datatouse;
 		global $count;
-		$reserv=-1;
+		$newdata=array(
+			$price,
+			$room,
+			$i,
+			$i,
+			$amount,
+			$reserv
+		);
+		if ($count==0){
+			$datatouse[$count]=$newdata;
+			$count++;
+		}
+		else {
+			if ($datatouse[$count-1][0]==$newdata[0]&&$datatouse[$count-1][1]==$newdata[1]&&
+				$datatouse[$count-1][4]==$newdata[4]&&$datatouse[$count-1][5]==$newdata[5]){
+				$datatouse[$count-1][3]=$i;
+				}
+			else {
+				$datatouse[$count]=$newdata;
+				$count++;
+			}
+		}		
+	}
+	if (isset($_GET['query'])){
+		global $next;
+		global $conn;
+		global $count;
+		global $all;
+		global $idroomtype;
+		$price=$_GET['price'];
+		$room=$_GET['room'];
+		$from=$_GET['from'];
+		$to=$_GET['to'];
+		$amount=$_GET['amount'];
 		startserver();
-		$firstquery=0;
-		if ($from==='-1'){
+		$count=0;
+		$all=-1;
+		//echo "transform price=".$price."room=".$room."from=".$from."to=".$to."amount=".$amount;
+		//--
+		if ($from!='-1' && $to=='-1'){
+			$to=$from;
+		}
+		if ($from=='-1' && $to=='-1'){
 			$from=date('Ymd',time());
 			$to=$from;
 		}
-		for ($i=$from;$i<=$to;$i++){
-			$sql = "SELECT * FROM reservation WHERE reserv_date = ".$i;
-			if ($price!=='-1')
-				$sql =$sql." AND price='".$price."'";
-			if ($roomtype!=='-1')
-				$sql=$sql." AND roomtype='".$roomtype."'";
-			if ($amount!=='-1'&&$amount!=='0')
-				$sql =$sql." AND amount=".$amount;
-			//echo $sql." ";
-			$result = $conn->query($sql);
-			//echo $result->num_rows;
-			//echo $amount;
-			if ($result->num_rows>0){
-				while($row = $result->fetch_assoc()){
-						$sql = "SELECT * FROM transaction WHERE reservid=".$row['id'];
-						$result2 = $conn->query($sql);
-						if ($reserv==-1){
-							if ($result2->num_rows>0){
-								$reserv=$result2->num_rows;
-							}
-							else $reserv=0;
-						}
-						else {
-							if ($reserv!=($result2->num_rows)){
-								store_row_reserv($sprice,$sroomtype,$sfrom,$sto,$samount,$reserv);
-								$sprice=$row["price"];
-								$sfrom=$i;
-								$sto=$i;
-								$sroomtype=$row["roomtype"];
-								$samount=$row["amount"];
-								$reserv=$result2->num_rows;
-							}
-						}
-						if ($firstquery===0){//first time
-							//echo "first time";
-							$sprice=$row["price"];
-							$sfrom=$i;
-							$sto=$i;
-							$sroomtype=$row["roomtype"];
-							$samount=$row["amount"];
-							$firstquery=1;
-						}
-						else {//new first time
-							if ($row["amount"]!==$samount||$row["price"]!==$sprice){//echo $amount."inner met";
-								if ($amount==='-1'||($amount==$samount)){
-									store_row_reserv($sprice,$sroomtype,$sfrom,$sto,$samount,$reserv);
-									}
-								$sprice=$row["price"];
-								$sfrom=$i;
-								$sto=$i;
-								$sroomtype=$row["roomtype"];
-								$samount=$row["amount"];
-							}
-							else {
-								$sto=$i;
-							}
-						}
-				}
+		//--
+		//transform
+		if ($from>$to){
+				echo "DATE ERROR";
+				return;
 			}
-			else {
-				if ($firstquery===0){//first time
-					//echo "inner not met first time";
-					$sprice=100;
-					$sfrom=$i;
-					$sto=$i;
-					$sroomtype=$roomtype;
-					$samount=0;
-					$firstquery=1;
+		//echo "transform price=".$price."room=".$room."from=".$from."to=".$to."amount=".$amount;
+		if ($room=="Any"){
+			$sql="SELECT * FROM roomtype";
+			$result_name=$conn->query($sql);
+			$gprice=$price;
+			$gamount=$amount;
+			while ($row_name=$result_name->fetch_assoc()){
+				$price=$gprice;
+				$amount=$gamount;
+				//echo "---".$amount."---";
+				$room=$row_name['roomname'];
+				getidroomtype($room);
+				$sql="SELECT * FROM roomtype WHERE roomname='".$room."'";
+				$result_roomtype=$conn->query($sql);
+				$row_roomtype=$result_roomtype->fetch_assoc();
+				$sql="SELECT * FROM reservation WHERE reserv_date=".$from." AND roomtype=".$idroomtype;
+				// $result_reserv=$conn->query($sql);
+				// $row_reserv=$result_reserv->fetch_assoc();
+				if ($price!='-1'){
+					$sql=$sql." AND price=".$price;
 				}
-				else {
-					if ($samount!==0){//echo "inner not met";
-						if ($amount==='-1'||($amount==$samount)){
-							store_row_reserv($sprice,$sroomtype,$sfrom,$sto,$samount,$reserv);
-							}
-						$sprice=100;
-						$sfrom=$i;
-						$sto=$i;
-						$sroomtype=$roomtype;
-						$samount=0;
+				if ($amount!='-1'){
+					$sql=$sql." AND amount=".$amount;
+				}
+				//echo $sql;
+				for ($i=$from;$i<$to;$i=$next){
+					//loop at here + replace
+					$result=$conn->query($sql);
+					if ($result->num_rows>0){
+						$row=$result->fetch_assoc();
+						$sql_reserv="SELECT * FROM transaction WHERE reservid=".$row['id'];
+						$result_tran=$conn->query($sql_reserv);
+						if ($result_tran->num_rows>0){
+							$reserv=$result_tran->num_rows;
+						}
+						else $reserv=0;
+						groupdata($i,$row['price'],$room,$row['amount'],$reserv);
 					}
 					else {
-						$sto=$i;
-					}
+						groupdata($i,$row_roomtype['price'],$room,$row_roomtype['amount'],0);
+						}
+					nextday($i);
+					$too=$next;
+					$sql=str_replace($i,$too,$sql);
+					//
 				}
+				//loop at here + replace
+				$result=$conn->query($sql);
+				if ($result->num_rows>0){
+					$row=$result->fetch_assoc();
+					$sql_reserv="SELECT * FROM transaction WHERE reservid=".$row['id'];
+					$result_reserv=$conn->query($sql_reserv);
+					if ($result_reserv->num_rows>0){
+						$reserv=$result_reserv->num_rows;
+					}
+					else $reserv=0;
+					groupdata($i,$row['price'],$room,$row['amount'],$reserv);
+				}
+				else groupdata($i,$row_roomtype['price'],$room,$row_roomtype['amount'],0);
+				//
 			}
-		}//echo "outer";
-		if ($amount==='-1'||($amount==$samount)){
-			store_row_reserv($sprice,$sroomtype,$sfrom,$sto,$samount,$reserv);
-			}
+		}
+		else {
+				getidroomtype($room);
+				$sql="SELECT * FROM roomtype WHERE roomname='".$room."'";
+				$result_roomtype=$conn->query($sql);
+				$row_roomtype=$result_roomtype->fetch_assoc();
+				$sql="SELECT * FROM reservation WHERE reserv_date=".$from." AND roomtype=".$idroomtype;
+				// $result_reserv=$conn->query($sql);
+				// $row_reserv=$result_reserv->fetch_assoc();
+				if ($price!='-1'){
+					$sql=$sql." AND price=".$price;
+				}
+				if ($amount!='-1'){
+					$sql=$sql." AND amount=".$amount;
+				}
+				//echo $sql;
+				for ($i=$from;$i<$to;$i=$next){
+					//loop at here + replace
+					$result=$conn->query($sql);
+					if ($result->num_rows>0){
+						$row=$result->fetch_assoc();
+						$sql_reserv="SELECT * FROM transaction WHERE reservid=".$row['id'];
+						$result_tran=$conn->query($sql_reserv);
+						if ($result_tran->num_rows>0){
+							$reserv=$result_tran->num_rows;
+						}
+						else $reserv=0;
+						groupdata($i,$row['price'],$room,$row['amount'],$reserv);
+					}
+					else {
+						groupdata($i,$row_roomtype['price'],$room,$row_roomtype['amount'],0);
+						}
+					nextday($i);
+					$too=$next;
+					$sql=str_replace($i,$too,$sql);
+					//
+				}
+				//loop at here + replace
+				$result=$conn->query($sql);
+				if ($result->num_rows>0){
+					$row=$result->fetch_assoc();
+					$sql_reserv="SELECT * FROM transaction WHERE reservid=".$row['id'];
+					$result_reserv=$conn->query($sql_reserv);
+					if ($result_reserv->num_rows>0){
+						$reserv=$result_reserv->num_rows;
+					}
+					else $reserv=0;
+					groupdata($i,$row['price'],$room,$row['amount'],$reserv);
+				}
+				else groupdata($i,$row_roomtype['price'],$room,$row_roomtype['amount'],0);
+				//
+		}
+		showdata();
 		stopserver();
-		//echo $count;
+	}
+	function showdata(){
+		global $count;
+		global $datatouse;
+		global $nameroomtype;
 		$i=0;
 		for ($i=0;$i<$count;$i++){
-			$tf=$datatouse[$i][2];
+			$tf=(string)$datatouse[$i][2];
 			$yf=$tf[0].$tf[1].$tf[2].$tf[3];
 			$mf=$tf[4].$tf[5];
 			$df=$tf[6].$tf[7];
-			$tt=$datatouse[$i][3];
+			$tt=(string)$datatouse[$i][3];
 			$yt=$tt[0].$tt[1].$tt[2].$tt[3];
 			$mt=$tt[4].$tt[5];
 			$dt=$tt[6].$tt[7];
-				echo '<tr>
-							<td><input type="text" class="form-control" id="inputPrice'.$i.'" value="'.$datatouse[$i][0].'" style="width:100px;"/></td>
-							<td><div id="roomtype'.$i.'">'.$datatouse[$i][1].'</div></td>
+				echo '<tr>  <td><input type="text" class="form-control" id="inputPrice'.$i.'" value="'.$datatouse[$i][0].'" style="width:100px;"/></td>
+							<td><input disabled type="text" class="form-control" id="roomtype'.$i.'" value="'.$datatouse[$i][1].
+							'" style="width:100px;"/></td>
 							<td><div class="input-daterange form-group" >
 								<span id="from'.$i.'" value='.$datatouse[$i][2].'>From '.$df."/".$mf."/".$yf.'</span>
-								<span id="to'.$i.'" value='.$datatouse[$i][3].'>To '.$dt."/".$mt."/".$yt.'</span>
+								<span id="to'.$i.'" value='.$datatouse[$i][3].'>To '.$dt.'/'.$mt.'/'.$yt.'</span>
 								</div>
 					 </td>
-							<td><input type="text" class="form-control" id="inputAlotment'.$i.'" value="'.$datatouse[$i][4].'" style="width:100px;"/></td>
-							<td><input disabled type="text" class="form-control" id="reserv'.$i.'" value="'.$datatouse[$i][5].'" style="width:40px;"/></td><td></td>
+							<td><input type="text" class="form-control" id="inputAlotment'.$i.'" value="'.$datatouse[$i][4].
+							'" placeholder="'.$datatouse[$i][4].'" style="width:100px;"/></td>
+							<td><input disabled type="text" class="form-control" id="reserv'.$i.'" value="'.$datatouse[$i][5].'" style="width:50px;"/></td><td></td>
 						</tr>
 						';
 		}
 	}
-	function store_row_reserv($sprice,$sroomtype,$sfrom,$sto,$samount,$reserv){
-		global $count;
-		global $datatouse;
-		if ($reserv==-1)$reserv=0;
-		$newdata = array (
-						"$sprice",
-						"$sroomtype",
-						"$sfrom",
-						"$sto",
-						"$samount",
-						"$reserv"
-						);
-		$datatouse[$count]=$newdata;
-		//echo $datatouse[$count][0];
-		$count++;
-	}
 	function update_reserv($price,$roomtype,$from,$to,$amount){
 		global $conn;
+		global $idroomtype;
 		startserver();
 		$i=$from;
+		getidroomtype($roomtype);
+		$roomtype=$idroomtype;
+			// echo"<script language=\"JavaScript\">";
+			// echo"alert('".$roomtype."')";
+			// echo"</script>";
 		//for ($i=$from;$i<=$to;$i++){
 		$sql = "SELECT * FROM reservation WHERE reserv_date='".$i."' AND roomtype='".$roomtype."'";
 		$result=$conn->query($sql);
@@ -317,31 +355,27 @@
 				if ($conn->query($sql) === TRUE){}
 				}
 				//echo 'insert';
-		else insertdatainreservation($roomtype,$i,$amount,$price);
-		
+		else {
+			insertdatainreservation($roomtype,$i,$amount,$price);
+			}
 		//}
 		stopserver();
 	}
-	function update($id=0,$fname="default",$lname="default"){
-		global $conn;
-		$sql = "UPDATE MyGuests SET lastname='Doe' WHERE id=2";
-		if ($conn->query($sql) === TRUE) {
-			print "Record updated successfully";
-		} else {
-			print "Error updating record: " . $conn->error;
-		}
-	}
-	function forupdate(){
-		startserver();
-		$count=$_POST["count"];
-		//echo $_POST["count"]."<br>";
-		for ($i=0;$i<$count;$i++){
-			$data[$i]=$_POST['members'.$i];
-			if ($_POST['edit'.$i]!==''){
-				update_reserv($data[$i][0],$data[$i][1],$data[$i][2],$data[$i][3],$_POST['edit'.$i]);
+	if (isset($_GET['update'])){
+		global $next;
+		$price=$_GET['price'];
+		$room=$_GET['room'];
+		$from=$_GET['from'];
+		$from=$from[11].$from[12].$from[13].$from[14].$from[8].$from[9].$from[5].$from[6];
+		$to=$_GET['to'];
+		$to=$to[9].$to[10].$to[11].$to[12].$to[6].$to[7].$to[3].$to[4];
+		$amount=$_GET['amount'];
+		//echo "Success Update".$price.$room.$from.$to.$amount;
+		for ($i=$from;$i<$to;$i=$next){
+			update_reserv($price,$room,$i,$i,$amount);
+			nextday($i);
 			}
-		}
-		stopserver();
+		update_reserv($price,$room,$i,$i,$amount);
 	}
 	function startserver(){
 		global $servername;
@@ -359,10 +393,6 @@
 	function stopserver(){
 		global $conn;
 		mysqli_close($conn);
-	}
-	if (isset($_GET['query'])){
-		//echo "test".$_GET['price'].$_GET['room'].$_GET['from'].$_GET['to'].$_GET['amount']."test";
-		select_reserv($_GET['price'],$_GET['room'],$_GET['from'],$_GET['to'],$_GET['amount']);
 	}
 	function nextday($today){
 		global $next;
@@ -390,93 +420,88 @@
 		$next=($y*10000)+($m*100)+$d;
 		//echo " next= >".$y." >".$m." >".$d;
 	}
-	if (isset($_GET['update'])){
-		$price=$_GET['price'];
-		$room=$_GET['room'];
-		$from=$_GET['from'];
-		$from=$from[11].$from[12].$from[13].$from[14].$from[8].$from[9].$from[5].$from[6];
-		$to=$_GET['to'];
-		$to=$to[9].$to[10].$to[11].$to[12].$to[6].$to[7].$to[3].$to[4];
-		$amount=$_GET['amount'];
-		//echo "Success Update".$price.$room.$from.$to.$amount;
-		update_reserv($price,$room,$from,$from,$amount);
-		for ($i=$from;$i<=$to;$i=$next){
-			nextday($i);
-			$too=$next;
-			update_reserv($price,$room,$too,$too,$amount);
-			}
+	function group_check($i){
+		global $datatocheck;
+		global $countcheck;
+		global $next;
+		$newcheck=array($i,$i);
+		if ($countcheck==0){
+			$datatocheck[$countcheck]=$newcheck;
+			$countcheck++;
+		}
+		else {
+			nextday($datatocheck[$countcheck-1][1]);
+			//echo $datatocheck[$countcheck-1][1].">>".$next."=".$i.",";
+			if ($next==$i)
+				$datatocheck[$countcheck-1][1]=$i;
+			else {
+				$datatocheck[$countcheck]=$newcheck;
+				$countcheck++;
+				}
+		}
 	}
 	function query_check($room,$from,$to,$amount){
 		global $conn;
-		global $count;
+		global $countcheck;
 		global $sum;
+		global $idroomtype;
+		global $next;
+		global $datatocheck;
 		startserver();
 		$fromret;
 		$toret;
 		$check=0;
-		for ($i=$from;$i<=$to;$i++){
-			$sql="SELECT * FROM reservation WHERE reserv_date='".$i."' AND roomtype='".$room."'";
+		$sum=0;
+		$countcheck=0;
+		getidroomtype($room);
+		for ($i=$from;$i<$to;$i=$next){
+			//echo $i;
+			$sql="SELECT * FROM reservation WHERE reserv_date=".$i." AND roomtype=".$idroomtype;
 			$result=$conn->query($sql);
 			if ($result->num_rows>0){
 				$row=$result->fetch_assoc();
-				
-				$sql = "SELECT * FROM transaction WHERE reservid=".$row['id'];
-				$result2 = $conn->query($sql);
-				if ($row['amount']-$result2->num_rows>0){
-					$sum=$sum+$row['price'];
-				}
-				else {
+				$sql2="SELECT * FROM transaction WHERE id=".$row['id'];
+				$result2=$conn->query($sql2);
+				if ($result2->num_rows==$row['amount']){
+					group_check($i);
 					$check=1;
-					if ($fromret==$i){
-						$fromret=$i;
-						$toret=$i;
-						}
-					else if ($i-$toret==1){
-						$toret=$i;
-					}
-					else if ($fromret==''){
-						$fromret=$i;
-						$toret=$i;
-					}				
-					else {
-						$shin=$fromret[6].$fromret[7].'/'.$fromret[4].$fromret[5].'/'.$fromret[0].$fromret[1].$fromret[2].$fromret[3];
-						$shhin=$toret[6].$toret[7].'/'.$toret[4].$toret[5].'/'.$toret[0].$toret[1].$toret[2].$toret[3];
-						echo date("d/m/Y", strtotime($fromret)).'-'.date("d/m/Y", strtotime($toret)).' ';
-						$fromret=$i;
-						$toret=$i;
-					}
 				}
-				
-				}
-			else {
-				$check=1;
-				if ($fromret==$i){
-					$fromret=$i;
-					$toret=$i;
-					}
-				else if ($i-$toret==1){
-					$toret=$i;
-				}
-				else if ($fromret==''){
-					$fromret=$i;
-					$toret=$i;
-				}				
 				else {
-					$shin=$fromret[6].$fromret[7].'/'.$fromret[4].$fromret[5].'/'.$fromret[0].$fromret[1].$fromret[2].$fromret[3];
-					$shhin=$toret[6].$toret[7].'/'.$toret[4].$toret[5].'/'.$toret[0].$toret[1].$toret[2].$toret[3];
-					echo date("d/m/Y", strtotime($fromret)).'-'.date("d/m/Y", strtotime($toret)).' ';
-					$fromret=$i;
-					$toret=$i;
+					$sum+=$row['price'];
 				}
+			}
+			else {
+				group_check($i);
+				$check=1;
+			}
+			nextday($i);
+		}
+		$sql="SELECT * FROM reservation WHERE reserv_date=".$i." AND roomtype=".$idroomtype;
+			$result=$conn->query($sql);
+			if ($result->num_rows>0){
+				$row=$result->fetch_assoc();
+				$sql2="SELECT * FROM transaction WHERE id=".$row['id'];
+				$result2=$conn->query($sql2);
+				if ($result2->num_rows==$row['amount']){
+					group_check($i);
+					$check=1;
+				}
+				else {
+					$sum+=$row['price'];
+				}
+			}
+			else {
+				group_check($i);
+				$check=1;
+			}
+		if ($check==0){
+			echo "Can".$sum;
+		}
+		else {
+			for ($i=0;$i<$countcheck;$i++){
+				echo date('d/m/Y',strtotime($datatocheck[$i][0]))."-".date('d/m/Y',strtotime($datatocheck[$i][1]))." ";
 			}
 		}
-		if ($check==0)
-			echo "Can ".$sum." ";
-		else {
-			$shout=$fromret[6].$fromret[7].'/'.$fromret[4].$fromret[5].'/'.$fromret[0].$fromret[1].$fromret[2].$fromret[3];
-			$returnout=$toret[6].$toret[7].'/'.$toret[4].$toret[5].'/'.$toret[0].$toret[1].$toret[2].$toret[3];
-			echo date("d/m/Y", strtotime($fromret)).'-'.date("d/m/Y", strtotime($toret)).' ';
-			}
 		stopserver();
 	}
 	if (isset($_GET['query_check'])){
@@ -486,7 +511,10 @@
 		global $conn;
 		global $sum;
 		global $last_id;
+		global $idroomtype;
 		startserver();
+		getidroomtype($room);
+		$room=$idroomtype;
 		$sql = "SELECT * FROM reservation WHERE reserv_date='".$too."' AND roomtype='".$room."'";
 		$result = $conn->query($sql);
 		$row=$result->fetch_assoc();
@@ -534,6 +562,9 @@
 	}
 	function returnroom($room,$too){
 		global $conn;
+		global $idroomtype;
+		getidroomtype($room);
+		$room=$idroomtype;
 		$sql="SELECT * FROM reservation WHERE roomtype='".$room."' AND reserv_date='".$too."'";
 		$result=$conn->query($sql);
 		if ($result->num_rows>0){
@@ -580,10 +611,10 @@
 	//startserver();
 	//stopserver();
 	//create_database("mydb");
-	//create_table("roomtype");
-	//create_table("reservation");
-	//create_table("customerdata");
-	//create_table("transaction");
+	// create_table("roomtype");
+	 // create_table("reservation");
+	 // create_table("customerdata");
+	 // create_table("transaction");
 	//insertdataintable("Hodjung","Jubujubu","HJ@gmail.com");
 	//insertdatainreservation("Sweet","20141113","3","100$");
 	//select(2);
