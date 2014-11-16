@@ -4,7 +4,6 @@ define('DB_USER', 'developers');
 define('DB_PASSWORD', '1234');
 define('DB_HOST', '192.168.137.98');
 $wwwdirectory = "/rabbizhillresort";
-
 function connectDB(){
 	$link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD,DB_NAME);
 	if (!$link) {
