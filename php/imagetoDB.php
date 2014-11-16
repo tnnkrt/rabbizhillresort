@@ -3,6 +3,7 @@ define('DB_NAME', 'resort');
 define('DB_USER', 'developers');
 define('DB_PASSWORD', '1234');
 define('DB_HOST', '192.168.137.98');
+$wwwdirectory = "/rabbizhillresort";
 function connectDB(){
 	$link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD,DB_NAME);
 	if (!$link) {
@@ -44,16 +45,17 @@ function Delete_image_gallery($name,$gallery_id){
 	} else {
 		throwError("Error deleting record: " . mysqli_error($link));
 	}
-	@unlink($_SERVER["DOCUMENT_ROOT"]."/rabbiz/php/uploadimage/".$value);
+	@unlink($_SERVER["DOCUMENT_ROOT"].$wwwdirectory."/php/uploadimage/".$value);
 	mysqli_query($link, $sql);
 	mysqli_close($link);
 }
+//ImageQuery
 	//---------------- Query file name in gallery--------------------//
 function Show_NameIn_gallery($gallery_id){ 
-	$link = connectDB();
-	$value = $gallery_id;	
-		//echo "database gallery id:".$gallery_id."\n";
+	$link = connectDB();	
+	//echo "database gallery id:".$gallery_id."\n";
 	$sql = "SELECT name_image FROM image WHERE gallery_id='".$gallery_id."' ";
+	//$sql = "SELECT * FROM image";
 	$result = $link->query($sql);
 	if ($result->num_rows > 0) {
 				// output data of each row
@@ -69,7 +71,6 @@ function Show_NameIn_gallery($gallery_id){
 		throwError("No any image");
 	}
 }
-
 	//-------------- Create new Gallery -----------------//
 function create_gallery($name){ 
 	$link = connectDB();

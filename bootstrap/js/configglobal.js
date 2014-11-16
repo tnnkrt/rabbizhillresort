@@ -15,6 +15,7 @@ function initGallery(gallerybox,galleryId){
     }).done(function(datas) {
         console.log(datas);
         var items = $.parseJSON(datas);
+        console.log(items);
         $(items).each(function(index,item){
         	$(gallerybox).append(ImageDOM('../php/uploadimage/',item['name_image'],galleryId));
         });

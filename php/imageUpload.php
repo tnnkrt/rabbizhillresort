@@ -1,7 +1,7 @@
 <?php
 include('global.php');
 include('imagetoDB.php');
-$DirPath="rabbiz/php/uploadimage/";
+$DirPath="rabbizhillresort/php/uploadimage/";
 $DesPath=$_SERVER["DOCUMENT_ROOT"]."/".$DirPath;
 
 if(strlen($_FILES["upFile"]["name"])<1){
