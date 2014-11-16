@@ -31,46 +31,8 @@ $( document ).ready(function() {
 		var roomtype = $('#inputRoom').val();
 		var person = $('#inputPerson').val();
 		//console.log(from,to,email,name,roomtype,person);
-		// var data=[email,name,roomtype,person,mydatefrom,mydateto];
-		//-----------------------------Must Query First
 		query(from,to,roomtype,email,name,person);
-		//-----------------------------Confirm After Query "Can"
-			// confirm(email,name,from,to,roomtype,person);
-		//else alertMessage("");
-		//-----------------------------Delete Order From id
-		//var id =$().val();
-		//deleteorder(id);
-		//console.log(from,to,roomtype);
 	});
-	// $("#btnconfirm").click(function(){
-		// var from;
-		// var to;
-		// if ('Invalid Date'==$('#dateArraival').datepicker('getDate')){
-			// to=-1;
-			// from=-1;
-		// }
-		// else {
-			// from=$('#dateArraival').datepicker('getDate')
-			// from.setDate(from.getDate()+1);
-			// //console.log(from);
-			// from=from.toISOString();
-			// if ('Invalid Date'==$('#dateDeparture').datepicker('getDate')){
-				// to=from;
-			// }
-			// else {
-				// to=$('#dateDeparture').datepicker('getDate');
-				// to.setDate(to.getDate()+1);
-				// to=to.toISOString();
-				// }
-			// from = from[0]+from[1]+from[2]+from[3]+from[5]+from[6]+from[8]+from[9];
-			// to = to[0]+to[1]+to[2]+to[3]+to[5]+to[6]+to[8]+to[9];
-			// }
-		// var email = $('#inputEmail').val();
-		// var name = $('#inputName').val();
-		// var roomtype = $('#inputRoom').val();
-		// var person = $('#inputPerson').val();
-		// confirm(email,name,from,to,roomtype,person);
-	// }
 });
 function deleteorder(id){
 	if (window.XMLHttpRequest) {
@@ -132,22 +94,16 @@ function query(from,to,roomtype,email,name,person){
 	xmlhttp.onreadystatechange=function() {
 		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
 			str=xmlhttp.responseText;
-			//document.getElementById("showquery").innerHTML=str;
-			//$("#showquery").nextAll().remove();
-			//console.log($("#showquery"));
-			//$(str).insertAfter("#showquery");
-			//xmlhttp.responseText;
 			//console.log(str.charAt(str.length-1));
-			//email,name,
 			//console.log(str);
 			if (str[0]=='C'){
-				var s=str.substr(4);
+				var s=str.substr(3);
 				console.log(s);
 				confirm(email,name,from,to,roomtype,person,s);
 			}
 			else {var s=str;
 				console.log(s);
-				console.log(str.replace(/\d/g,"").length);
+				//console.log(str.replace(/\d/g,"").length);
 				for (var i=0;i<str.replace(/\d/g,"").length;i++){
 					if (i==0){
 						s=str.substr(0,str.indexOf(' '));
@@ -161,7 +117,7 @@ function query(from,to,roomtype,email,name,person){
 						alertMessage("Can not reserv Date:"+s);
 						str=str.substr((str.indexOf(' ')));
 						str=str.substr(1);
-						console.log(str+"-");
+						console.log(str);
 					}
 				}
 			}

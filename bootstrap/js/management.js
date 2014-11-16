@@ -32,11 +32,10 @@ $( document ).ready(function() {
 		showData(price,room,from,to,amount);
 	});
 	$("#btnforsave").click(function(){
-		console.log($("#showquery").nextAll().length);
+		//console.log($("#showquery").nextAll().length);
 		var check=0;
 		for (var i=0;i<$("#showquery").nextAll().length;i++){
-			//console.log("update"+i);
-			if ($("#inputAlotment"+i).val()<$("#reserv"+i).val()){
+			if (($("#inputAlotment"+i).val())&&$("#inputAlotment"+i).val()<$("#reserv"+i).val()){
 				check++;
 				alertMessage("Error: Row:"+(i+1)+" Alotment < Reserved");
 			}
@@ -60,7 +59,7 @@ function initRoom(){
 	xmlhttp.onreadystatechange=function() {
 		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
 			str=xmlhttp.responseText;
-			console.log(str);
+			//console.log(str);
 			$("#inputRoom").append(str);
 		}
 	}
@@ -93,20 +92,23 @@ function showData(price,room,from,to,amount){
 	xmlhttp.onreadystatechange=function() {
 		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
 			str=xmlhttp.responseText;
-			console.log(str);
+			//console.log(str);
 			//document.getElementById("showquery").innerHTML=str;
 			$("#showquery").nextAll().remove();
 			//console.log($("#showquery"));
 			$(str).insertAfter("#showquery");
 			//xmlhttp.responseText;
-			console.log($("#showquery").nextAll().length);
+			//console.log($("#showquery").nextAll().length);
+			if (str=="NODATA"){
+				alertMessage("NO DATA");
+			}
 		}
 	}
 	  xmlhttp.open("GET","../php/query.php?query=true&price="+price+"&room="+room+"&from="+from+"&to="+to+"&amount="+amount,true);
 	  xmlhttp.send();
 }
 function savedata(i){
-		console.log(i);
+		//console.log(i);
 		if (i==0)i='0';
 		//console.log("update");
 		if (window.XMLHttpRequest) {
@@ -119,11 +121,19 @@ function savedata(i){
 			if (xmlhttp.readyState==4 && xmlhttp.status==200){
 				//console.log($("#showquery").nextAll().length);
 				str=xmlhttp.responseText;
-				console.log(str);
+				//console.log(str);
 			}
 		}
-		console.log($("#inputPrice"+i).val(),$("#roomtype"+i).text(),$("#from"+i).text(),$("#to"+i).text(),$("#inputAlotment"+i).val());
-		xmlhttp.open("GET","../php/query.php?update=true&price="+$("#inputPrice"+i).val()+"&room="+$("#roomtype"+i).text()+"&from="+$("#from"+i).text()
-					+"&to="+$("#to"+i).text()+"&amount="+$("#inputAlotment"+i).val(),true);
+		var price=$("#inputPrice"+i).val();
+		var room=$("#roomtype"+i).val();
+		var from=$("#from"+i).text();
+		var to=$("#to"+i).text();
+		var amount=$("#inputAlotment"+i).val();
+		if (amount=='')
+			amount=$("#inputAlotment"+i).attr("placeholder");
+		xmlhttp.open("GET","../php/query.php?update=true&price="+price+"&room="+room+"&from="+from
+					+"&to="+to+"&amount="+amount,true);
 		xmlhttp.send();
+		console.log(price,room,from,to,amount);
+		//console.log($("#inputAlotment"+i).attr("placeholder"));
 }
