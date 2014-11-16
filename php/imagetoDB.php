@@ -4,6 +4,7 @@ define('DB_USER', 'developers');
 define('DB_PASSWORD', '1234');
 define('DB_HOST', '192.168.137.98');
 $wwwdirectory = "/chadaporn/rabbizhillresort";
+
 function connectDB(){
 	$link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD,DB_NAME);
 	if (!$link) {
@@ -13,8 +14,7 @@ function connectDB(){
 }
 function Up_imageto_gallery($nameoffile,$gallery_id){
 	$link = connectDB();
-	$value = $nameoffile;
-	echo $gallery_id;
+	//echo $gallery_id;
 	$sql = "INSERT INTO image (name_image,gallery_id) VALUES ('".$nameoffile."',".$gallery_id.")";
 	mysqli_query($link, $sql);
 	mysqli_close($link);
@@ -33,28 +33,26 @@ function Edit_imageto_gallery($nameoffile,$detail_th,$detail_en){
 	mysqli_close($link);
 }
 
-function Delete_image_gallery($name,$gallery_id){
+function Delete_image_gallery($nameImage,$gallery_id){
 	$link = connectDB();
-	$value = $name;
-	$value2 = $gallery_id;
-
-		//echo $_SERVER["DOCUMENT_ROOT"]."/rabbiz/php/uploadimage/".$value;
-	$sql = "DELETE FROM image WHERE name_image='$value'";
+		//$value2 = $gallery_id;
+		//echo $_SERVER["DOCUMENT_ROOT"]."/rabbiz/php/uploadimage/".$nameImage;
+	$sql = "DELETE FROM image WHERE name_image='$nameImage'";
 	if (mysqli_query($link, $sql)) {
 		echo "Record deleted successfully";
 	} else {
 		throwError("Error deleting record: " . mysqli_error($link));
 	}
-	@unlink($_SERVER["DOCUMENT_ROOT"].$wwwdirectory."/php/uploadimage/".$value);
+	@unlink($_SERVER["DOCUMENT_ROOT"].$wwwdirectory."/php/uploadimage/".$nameImage);
 	mysqli_query($link, $sql);
 	mysqli_close($link);
 }
 //ImageQuery
 	//---------------- Query file name in gallery--------------------//
-function Show_NameIn_gallery($gallery_id){ 
+function Show_NameIn_gallery($galleryId){ 
 	$link = connectDB();	
-	//echo "database gallery id:".$gallery_id."\n";
-	$sql = "SELECT name_image FROM image WHERE gallery_id='".$gallery_id."' ";
+	//echo "database gallery id:".$galleryId."\n";
+	$sql = "SELECT name_image FROM image WHERE gallery_id='".$galleryId."' ";
 	//$sql = "SELECT * FROM image";
 	$result = $link->query($sql);
 	if ($result->num_rows > 0) {
@@ -72,11 +70,10 @@ function Show_NameIn_gallery($gallery_id){
 	}
 }
 	//-------------- Create new Gallery -----------------//
-function create_gallery($name){ 
+function create_gallery($nameGallery){ 
 	$link = connectDB();
-	$value = $name;	
-			//echo $value;
-	$sql="INSERT INTO gallery (name_gallery) VALUES ('".$value."') ";
+		//echo $nameGallery;
+	$sql="INSERT INTO gallery (name_gallery) VALUES ('".$nameGallery."') ";
 	if (mysqli_query($link, $sql)) {
 		echo "New record  Gallery created successfully";
 	} else {

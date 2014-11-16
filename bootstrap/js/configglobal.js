@@ -1,4 +1,5 @@
 var objectDeleteImage = {image:"",galleryId:""};
+var wwwdirectory = "/rabbizhillresort"
 bootstrap_alert = function() {}
 bootstrap_alert.warning = function(message) {
 	$('#alert_placeholder').append('<div class="alert alert-danger alert-dismissible fade in alertDelete" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>'+message+'</div>');
@@ -17,7 +18,7 @@ function initGallery(gallerybox,galleryId){
         var items = $.parseJSON(datas);
         console.log(items);
         $(items).each(function(index,item){
-        	$(gallerybox).append(ImageDOM('../php/uploadimage/',item['name_image'],galleryId));
+        	$(gallerybox).append(ImageDOM(wwwdirectory+'/php/uploadimage/',item['name_image'],galleryId));
         });
         alertMessage('<strong>Complete!</strong> Download images complete.');
     }).fail(function(data) {
@@ -41,7 +42,7 @@ function uploadImage(gallerybox,data,galleryId){
         console.log(data);
         $('#btnRemoveUpload').click();
         alertMessage('<strong>Success!</strong> image was upload successfully.');
-        $(gallerybox).append(ImageDOM('../php/uploadimage/',data.substring(0,23),galleryId));
+        $(gallerybox).append(ImageDOM(wwwdirectory+'/php/uploadimage/',data.substring(0,23),galleryId));
     }).fail(function(data) {
         alertMessage('<strong>'+data.responseText+'!</strong> please refresh and try again.');
     });
@@ -50,7 +51,7 @@ function prepareDeleteImage(name,galleryId){
 	console.log(name+"&"+galleryId);
 	objectDeleteImage.image=name;
 	objectDeleteImage.galleryId=galleryId;
-	$('#modalimage').attr({src:'../php/uploadimage/'+name});
+	$('#modalimage').attr({src:wwwdirectory+'/php/uploadimage/'+name});
 }
 function deleteImage(){
 	console.log(objectDeleteImage);
